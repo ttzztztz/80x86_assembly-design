@@ -22,7 +22,7 @@ data segment
                     db ?
                     db 20 dup(0)
     student_count   db 0
-    student_table   db 10 dup(20 dup(0), 10 dup(0), 10 dup(0))
+    student_table   db 10 dup(20 dup(0), 20 dup(0), 20 dup(0))
 data ends
 
 stack segment stack
@@ -83,7 +83,7 @@ code segment
         cmp byte ptr [student_count], 10
         je insert_err_full
 
-        mov al, 40
+        mov al, 60
         mul byte ptr [student_count]
         mov di, ax
 
@@ -105,7 +105,7 @@ code segment
         mov ah, 09h
         int 21h
         call input_string
-        mov bx, 30
+        mov bx, 40
         call memcpy
 
         inc byte ptr [student_count]
@@ -128,7 +128,7 @@ code segment
         mov dx, 0 ; dl: loop index
     query_process:
         mov ah, 0
-        mov al, 40
+        mov al, 60
         mul dl
         mov di, ax
         mov bx, 0
@@ -175,7 +175,7 @@ code segment
         mov ah, 09h
         int 21h
 
-        lea dx, student_table[di]
+        lea dx, student_table[di][0]
         mov ah, 09h
         int 21h
 
@@ -199,7 +199,7 @@ code segment
         mov ah, 09h
         int 21h
 
-        lea dx, student_table[di][30]
+        lea dx, student_table[di][40]
         mov ah, 09h
         int 21h
 
@@ -251,7 +251,7 @@ code segment
         ret
     memcpy:
         mov ah, 0
-        mov al, 40
+        mov al, 60
         mov dl, byte ptr [student_count]
         mul dl
         add bx, ax
