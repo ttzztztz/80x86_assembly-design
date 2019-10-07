@@ -1,10 +1,10 @@
 assume cs:code, ds: data, ss: stack
 
 data segment
-    output dw 0
+    qq db 'qqqqqqq'
 data ends
 
-stack segment
+stack segment stack
     dw 0
 stack ends
 
@@ -13,16 +13,8 @@ code segment
         mov ax, data
         mov ds, ax
 
-        mov ax, 0
-        mov cx, 12
-
-        jmp seg1
-    seg1:
-        inc ax
-        loop seg1
-
-        mov output, ax
-
+        mov ah, byte ptr[qq]
+        
         mov ah, 4ch
         int 21h
 code ends
