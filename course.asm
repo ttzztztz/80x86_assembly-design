@@ -57,14 +57,13 @@ code segment
         cmp al, 'q'
         je exit
 
-        call error_invalid_command
-        jmp first_input
+        jmp error_invalid_command
     error_invalid_command:
         lea dx, ERR_INVALID_COMMAND
         mov ah, 09h
         int 21h
 
-        ret
+        jmp first_input
     output_CRLF:
         lea dx, CRLF
         mov ah, 09h
