@@ -3,7 +3,7 @@ assume cs:code, ds: data, ss: stack
 data segment
     ; constant area
     CRLF db 0dh,0ah,'$'
-    MSG_WELCOME db 'Welcome to Student Managment System By U201816816, Yang Ziyue ',0dh,0ah,' 1. Insert Grade ',0dh,0ah,' 2. Query Grade ',0dh,0ah,' q: Exit',0dh,0ah,'$'
+    MSG_WELCOME db 'Welcome to Student Managment System By U201816816, Yang Ziyue ',0dh,0ah,' 1. Insert Grade ',0dh,0ah,' 2. Query Grade ',0dh,0ah,' q. Exit',0dh,0ah,'$'
     MSG_INPUT_STUDENTID db 'Input StudentID: ','$'
     MSG_INPUT_GRADE db 'Input Grade: ','$'
     MSG_INPUT_RANK db 'Input Rank: ','$'
@@ -80,7 +80,7 @@ code segment
         jmp first_input
     insert:
         cmp byte ptr [student_count], 10
-        jnb insert_err_full
+        je insert_err_full
 
         mov al, 40
         mul byte ptr [student_count]
@@ -123,7 +123,6 @@ code segment
         mov cl, byte ptr [student_count]
         mov ch, 0
         mov dx, 0 ; dl: loop index
-
     query_process:
         mov ah, 0
         mov al, 40
@@ -233,6 +232,11 @@ code segment
         ; int 21h
         ret
     memcpy:
+        mov ah, 0
+        mov al, 40
+        mov dl, byte ptr [student_count]
+        mul dl
+        add bx, ax
         ; function: copy string from buffer to the right space
         mov cl, input_buffer + 1
         inc cl
