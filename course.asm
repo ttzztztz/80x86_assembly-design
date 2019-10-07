@@ -11,10 +11,11 @@ data segment
     MSG_PREFIX_GRADE db 'Target Grade: ','$'
     MSG_PREFIX_RANK db 'Target Rank: ','$'
     MSG_DEBUG_INFO db '[Debug Info] Last exectued input string: ','$'
+    MSG_CONTINUE db 'Press Enter to continue ...','$'
+    MSG_INSERT_OK db '[Success] INSERT OK',0dh,0ah,'$'
     ERR_FULL db '[Error] Already Full : Students count SHOULD NOT excceed 10 !',0dh,0ah,'$'
     ERR_INVALID_COMMAND db '[Error] INVALID Command!',0dh,0ah,'$'
     ERR_NOT_EXIST db '[Error] Wrong Student ID: target student NOT exist !',0dh,0ah,'$'
-    MSG_INSERT_OK db '[Success] INSERT OK',0dh,0ah,'$'
     
     ; variables
     input_buffer    db 20
@@ -113,6 +114,8 @@ code segment
         mov ah, 09h
         int 21h
 
+        call press_enter_to_continue
+
         jmp first_input
     query:
         lea dx, MSG_INPUT_STUDENTID
@@ -163,6 +166,9 @@ code segment
         lea dx, ERR_NOT_EXIST
         mov ah, 09h
         int 21h
+
+        call press_enter_to_continue
+
         jmp first_input
     print_student_info:
         lea dx, MSG_PREFIX_STUDENTID
@@ -197,11 +203,23 @@ code segment
         mov ah, 09h
         int 21h
 
+        call press_enter_to_continue
+        jmp first_input
+    press_enter_to_continue:
         lea dx, CRLF
         mov ah, 09h
         int 21h
 
-        jmp first_input
+        lea dx, MSG_CONTINUE
+        mov ah, 09h
+        int 21h
+
+        call input_string
+        lea dx, CRLF
+        mov ah, 09h
+        int 21h
+
+        ret
     input_string:
         lea dx, input_buffer
         mov ah, 0ah
